@@ -1,0 +1,8 @@
+requirements = [
+    "requests",
+    "pytest",
+    "openai",
+    "langchain",
+    "python-dotenv",
+    "pydantic",
+]
