@@ -4,7 +4,7 @@
 
 An automated Python-based tool that parses Swagger/OpenAPI documentation, extracts API endpoints, and automatically generates robust Pytest test cases to streamline backend testing.
 
-<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d88506d50ef.gif" width="100%"/>
+<img src="docs/demo.gif" width="100%"/>
 
 <p>
   <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
