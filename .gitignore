@@ -1,1 +1,23 @@
+# Environment / secrets
 .env
+.venv/
+venv/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Generated output (results of running the tool)
+generated_tests/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

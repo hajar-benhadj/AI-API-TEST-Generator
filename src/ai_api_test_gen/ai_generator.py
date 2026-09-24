@@ -21,17 +21,14 @@ class AITestGenerator:
         if openai is not None and self.api_key:
             openai.api_key = self.api_key
 
-    def generate_tests(self, endpoints):
+    def generate_tests(self, endpoints, base_url="http://localhost:5000"):
         """
         Generates executable Pytest test cases based on the provided API endpoints.
-        It maps out GET and POST requests, handles base URLs, and adds 
+        It maps out GET and POST requests, handles base URLs, and adds
         assertions for expected status codes (e.g., 200, 201, 400).
         """
         print("🤖 Generating Pytest test code for the extracted endpoints...")
 
-        # Base URL pointing to the local backend server (Must be running for tests to pass)
-        base_url = "http://localhost:5000"
-        
         # Start constructing the Python test file content
         test_code = f"""import pytest
 import requests
@@ -76,13 +73,13 @@ BASE_URL = "{base_url}"
 
 '''
 
-        # Adding a negative test case example to check error handling
-        test_code += '''def test_negative_item():
-    """Negative test case to verify handling of invalid endpoints or IDs"""
-    url = f"{BASE_URL}/api/v1/items/invalid_id"
+        # Adding a negative test case to check error handling on unknown routes
+        test_code += '''def test_unknown_endpoint_returns_error():
+    """Negative test case: an endpoint that does not exist in the spec."""
+    url = f"{BASE_URL}/__nonexistent_endpoint_probe__"
     response = requests.get(url)
-    # Expecting a 404 or 400 error for non-existent resources
-    assert response.status_code in [404, 400, 422], f"Expected error code, got: {response.status_code}"
+    # Expecting a 404 (or a 4xx validation error) for non-existent resources
+    assert response.status_code in [404, 400, 405, 422], f"Expected error code, got: {response.status_code}"
 '''
 
         return test_code

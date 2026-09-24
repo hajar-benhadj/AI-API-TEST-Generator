@@ -7,10 +7,11 @@ An automated Python-based tool that parses Swagger/OpenAPI documentation, extrac
 <img src="docs/demo.gif" width="100%"/>
 
 <p>
-  <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
+  <a href="https://github.com/hajar-benhadj/AI-API-TEST-Generator/actions/workflows/ci.yml"><img src="https://github.com/hajar-benhadj/AI-API-TEST-Generator/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
+  <img src="https://img.shields.io/badge/Python-3.9%20%7C%203.12-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
   <img src="https://img.shields.io/badge/Pytest-0A7EDC?style=for-the-badge&logo=pytest&logoColor=white"/>
-  <img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white"/>
   <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black"/>
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"/>
 </p>
 
 </div>
@@ -19,67 +20,89 @@ An automated Python-based tool that parses Swagger/OpenAPI documentation, extrac
 
 ## ✨ Key Features
 
-* **📊 Automated Parsing:** Seamlessly reads and parses Swagger/OpenAPI JSON files to extract all available backend API endpoints.
-* **🤖 AI-Powered Scaffolding:** Utilizes AI models and structured templates to automatically generate comprehensive Pytest test cases.
-* **⚡ Instant Execution:** Automatically runs the generated test suite using Pytest to validate backend functionality instantly.
-* **📂 Structured Architecture:** Clean modular layout separating core logic, generated outputs, and sample configurations.
+* **📊 Automated Parsing:** Reads Swagger/OpenAPI specs in **JSON or YAML** and extracts every backend endpoint (GET, POST, PUT, PATCH, DELETE…).
+* **🧪 Pytest Scaffolding:** Generates a clean, ready-to-run pytest suite — one test per endpoint, plus a negative test for unknown routes.
+* **🎯 Configurable Base URL:** Point the generated tests at localhost, staging, or production with a single flag.
+* **⚡ Instant Execution:** Run the generated suite automatically with `--run` right after generation.
+* **📦 Installable:** Install it as a CLI with `pip install ai-api-test-gen` and generate tests from any directory.
 
----
+## 📦 Installation
+
+```bash
+# From PyPI (once published)
+pip install ai-api-test-gen
+
+# Or from source
+git clone https://github.com/hajar-benhadj/AI-API-TEST-Generator.git
+cd AI-API-TEST-Generator
+pip install -e .
+```
+
+> Optional: `pip install "ai-api-test-gen[openai]"` if you want to experiment with AI-assisted generation.
+
+## 🚀 Usage
+
+```bash
+# Generate tests from the bundled sample spec
+ai-api-test-gen samples/sample_swagger.json
+
+# Point the generated tests at a real backend
+ai-api-test-gen my_api.yaml -b https://api.example.com
+
+# Generate AND run the suite immediately
+ai-api-test-gen my_api.json --run
+
+# Choose where the suite is written
+ai-api-test-gen my_api.json -o tests/generated
+```
+
+Or without installing, from a source checkout:
+
+```bash
+python -m ai_api_test_gen samples/sample_swagger.json
+```
+
+The generated file lands in `generated_tests/test_generated_api.py` by default. Make sure your backend is running at the configured base URL, then:
+
+```bash
+pytest generated_tests/test_generated_api.py -v
+```
 
 ## 📂 Project Structure
 
+```
 AI-API-TEST-GENERATOR/
 │
-├── core/
-│   ├── __init__.py          # Package initializer
-│   ├── ai_generator.py      # Generates Pytest test cases using templates/AI
-│   ├── executor.py          # Executes generated tests automatically via Pytest
-│   └── parser.py            # Parses Swagger/OpenAPI JSON files
+├── src/ai_api_test_gen/
+│   ├── __init__.py          # Package exports
+│   ├── cli.py               # Command-line interface
+│   ├── ai_generator.py      # Generates pytest test cases from endpoints
+│   ├── executor.py          # Executes generated tests via pytest
+│   └── parser.py            # Parses Swagger/OpenAPI JSON & YAML specs
 │
-├── generated_tests/
-│   └── test_generated_api.py  # Automatically generated test suite
-│
-├── samples/
-│   └── sample_swagger.json    # Sample Swagger/OpenAPI documentation file
-│
-├── .gitignore                 # Specifies files and directories ignored by Git
-├── requirements.txt           # Project dependencies
-└── main.py                    # Main entry point of the application
-
----
+├── tests/                   # Unit tests for the tool itself (CI-covered)
+├── samples/                 # Sample Swagger/OpenAPI specs (JSON + YAML)
+├── docs/                    # Demo assets
+├── pyproject.toml           # Packaging metadata (pip-installable)
+└── .github/workflows/       # CI: pytest across Python 3.9–3.12
+```
 
 ## 🛠️ Technologies Used
 
-* **Python 3.12** — Core programming language for logic and automation scripts.
-* **Pytest** — Robust testing framework used to execute generated test suites.
-* **Requests** — HTTP library for sending requests during API validation.
-* **OpenAI API** — Intelligent code generation engine for automated scaffolding.
+* **Python 3.9+** — Core programming language.
+* **Pytest** — Framework used to execute generated test suites.
+* **Requests** — HTTP library used inside the generated tests.
+* **PyYAML** — YAML spec support.
+* **OpenAI API (optional)** — For experimenting with AI-assisted scaffolding.
 
----
+## 🧪 Development
 
-## 🚀 How to Run Locally
+```bash
+pip install -e ".[dev]"
+pytest -v
+```
 
-1. Clone this repository to your local machine:
-   git clone https://github.com/hajar-benhadj/AI-API-TEST-GENERATOR.git
-   cd AI-API-TEST-GENERATOR
-
-2. Create and activate a virtual environment:
-   python -m venv venv
-   venv\Scripts\activate
-
-3. Install dependencies:
-   pip install -r requirements.txt
-
-4. Set up environment variables:
-   Create a .env file in the root directory and add your OPENAI_API_KEY.
-
-5. Run the main script to generate tests:
-   python main.py
-
-6. Execute the generated tests using Pytest:
-   pytest generated_tests/test_generated_api.py -v
-
----
+CI runs the full test suite on every push and pull request across Python 3.9 → 3.12.
 
 ## 🤝 Contributing
 
